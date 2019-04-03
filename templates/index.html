@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>EJ PEE EYE WA:Z</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.css') }}">
 </head>
 <body>
-    <p>I got here</p>
+{% include "navbar.html" %}
+{% block content %} {% endblock %}
 </body>
 </html>

@@ -1,0 +1,35 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="/">Home</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            {% if session['is_valid'] == True %}
+            <ul class="navbar-nav mr-auto">
+            </ul>
+            <ul class="nav navbar-right" >
+            <li>
+                <a class="nav-link" href="{{ url_for('logout')}}">logout({{session['user_name']}})</a>
+            </li>
+            <!--<li>-->
+                <!--<a class="nav-link" href="{{ url_for('display', type='user', id=session['id'])}}">{{session['user_name']}}</a>-->
+            <!--</li>-->
+            {% else %}
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('list') }}">list</a>
+                </li>
+            </ul>
+            <ul class="nav navbar-right" >
+            {#<li>
+                <a class="nav-link" href="{{ url_for('add', type='user', id='0') }}">Register</a>
+            </li>#}
+            <li>
+                <a class="nav-link" href="{{ url_for('login')}}">LOGIN</a>
+            </li>
+            {% endif %}
+        </ul>
+    </div>
+</nav>
