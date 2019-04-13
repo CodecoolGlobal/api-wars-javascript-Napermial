@@ -6,30 +6,36 @@
     </button>
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            {% if session['is_valid'] == True %}
+        {% if session['is_valid'] == True %}
             <ul class="navbar-nav mr-auto">
             </ul>
-            <ul class="nav navbar-right" >
+            <ul class="nav navbar-right">
             <li>
-                <a class="nav-link" href="{{ url_for('logout')}}">logout({{session['user_name']}})</a>
+                <a class="nav-link" href="{{ url_for('logout') }}">logout({{ session['user_name'] }})</a>
             </li>
             <!--<li>-->
-                <!--<a class="nav-link" href="{{ url_for('display', type='user', id=session['id'])}}">{{session['user_name']}}</a>-->
+            <!--<a class="nav-link" href="{{ url_for('display', type='user', id=session['id'])}}">{{session['user_name']}}</a>-->
             <!--</li>-->
-            {% else %}
+        {% else %}
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('list') }}">list</a>
-                </li>
-            </ul>
-            <ul class="nav navbar-right" >
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('list') }}">list</a>
+            </li>
+            <ul class="nav navbar-right">
             {#<li>
                 <a class="nav-link" href="{{ url_for('add', type='user', id='0') }}">Register</a>
             </li>#}
             <li>
-                <a class="nav-link" href="{{ url_for('login')}}">LOGIN</a>
+                <a class="nav-link" href="{{ url_for('login') }}">LOGIN</a>
             </li>
-            {% endif %}
+        {% endif %}
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" onclick="nextButton()">next</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" onclick="nextButton()">next</a>
+            </li>
         </ul>
     </div>
 </nav>
