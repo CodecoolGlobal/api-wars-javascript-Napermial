@@ -16,13 +16,10 @@ function nextButton() {
     // getApiResponse.then.nextPage
 }
 
-var id = 0;
-
 function generateInfoButton() {
     let infoButton = document.createElement("button");
     infoButton.innerHTML = "residents";
-    infoButton.setAttribute('name', id);
-    id++;
+    infoButton.setAttribute('name', 'name');
     return infoButton
 }
 
@@ -47,11 +44,11 @@ function generateList(selectedKeys, sth, results) {
             elems.appendChild(tableElement);
             tablePlace.appendChild(elems);
         }
-        let infoButton = generateInfoButton();
-        elems.appendChild(infoButton);
+        if (planet['residents'] && planet['residents'].length) {
+            let infoButton = generateInfoButton();
+            elems.appendChild(infoButton);
+        }
     }
-
-
 }
 
 function declareVariables(data) {
