@@ -7,8 +7,13 @@ async function getApiResponse(spec) {
 }
 
 function moreInfo() {
-    return null
+    let buttons = document.querySelectorAll('button.button');
+    for(button of buttons){
+        button.addEventListener('click', function () {
+            alert(button['name'])
+        })
 
+    }
 }
 
 function nextButton() {
@@ -16,10 +21,11 @@ function nextButton() {
     // getApiResponse.then.nextPage
 }
 
-function generateInfoButton() {
+function generateInfoButton(planetResidents) {
     let infoButton = document.createElement("button");
     infoButton.innerHTML = "residents";
-    infoButton.setAttribute('name', 'name');
+    infoButton.setAttribute('class','button');
+    infoButton.setAttribute('name', planetResidents);
     return infoButton
 }
 
@@ -45,7 +51,7 @@ function generateList(selectedKeys, sth, results) {
             tablePlace.appendChild(elems);
         }
         if (planet['residents'] && planet['residents'].length) {
-            let infoButton = generateInfoButton();
+            let infoButton = generateInfoButton(planet['residents']);
             elems.appendChild(infoButton);
         }
     }
@@ -60,16 +66,21 @@ function declareVariables(data) {
     return {results, selectedKeys, sth};
 }
 
-getApiResponse(" ")
-    .then(function (data) {
-        let nextPage = function () {
-            return data['next']
-        };
-        const __ret = declareVariables(data);
-        let results = __ret.results;
-        const selectedKeys = __ret.selectedKeys;
-        let sth = __ret.sth;
-        generateList(selectedKeys, sth, results);
-    });
 
 
+function main() {
+    getApiResponse(" ")
+        .then(function (data) {
+            let nextPage = function () {
+                return data['next']
+            };
+            const __ret = declareVariables(data);
+            let results = __ret.results;
+            const selectedKeys = __ret.selectedKeys;
+            let sth = __ret.sth;
+            generateList(selectedKeys, sth, results);
+            moreInfo()
+        });
+}
+
+main();
