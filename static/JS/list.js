@@ -8,12 +8,32 @@ async function getApiResponse(spec) {
 
 function moreInfo() {
     let buttons = document.querySelectorAll('button.button');
-    for(button of buttons){
+    for (button of buttons) {
         button.addEventListener('click', function () {
-            alert(button['name'])
+            let modal = renderModal();
+            modal.style.display = 'block';
         })
-
     }
+
+}
+
+function renderModal() {
+    let modal = document.createElement('div');
+    modal.setAttribute('class', 'modal');
+    modal.setAttribute('id', 'myModal');
+    let close = document.createElement('span');
+    close.setAttribute('class', 'close');
+    close.innerHTML = '&times;';
+    let infoText = document.createElement('p');
+    let textText = document.createTextNode('ezaz');
+    infoText.appendChild(textText);
+    modal.appendChild(infoText);
+    modal.appendChild(close);
+    document.body.appendChild(modal);
+    close.addEventListener('click', function () {
+        modal.style.display = 'none'
+    });
+    return modal
 }
 
 function nextButton() {
@@ -24,7 +44,7 @@ function nextButton() {
 function generateInfoButton(planetResidents) {
     let infoButton = document.createElement("button");
     infoButton.innerHTML = "residents";
-    infoButton.setAttribute('class','button');
+    infoButton.setAttribute('class', 'button');
     infoButton.setAttribute('name', planetResidents);
     return infoButton
 }
@@ -65,7 +85,6 @@ function declareVariables(data) {
     let sth = document.createElement("tr");
     return {results, selectedKeys, sth};
 }
-
 
 
 function main() {
