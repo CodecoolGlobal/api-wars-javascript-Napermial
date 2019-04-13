@@ -110,7 +110,7 @@ function declareVariables(data) {
     const selectedKeys = [allKeys[0], allKeys[3], allKeys[4],
         allKeys[6], allKeys[7], allKeys[8]];
     let sth = document.createElement("tr");
-    return {results, selectedKeys, sth, nextPage, previousPage};
+    return {results, selectedKeys, landingSite: sth, nextPage, previousPage};
 }
 
 function secondaryFetch(link) {
@@ -120,18 +120,13 @@ function secondaryFetch(link) {
 function main() {
     getApiResponse("planets/")
         .then(function (data) {
-            let nextPage = function () {
-                return data['next']
-            };
             const __ret = declareVariables(data);
             let results = __ret.results;
             const selectedKeys = __ret.selectedKeys;
-            let sth = __ret.sth;
-            let nextPage = __ret.nextPage;
-            let prevP = __ret.previousPage;
+            let sth = __ret.landingSite;
             generateList(selectedKeys, sth, results);
-            moreInfo()
-            navButtons(nextPage,prevP )
+            moreInfo();
+            navButtons(__ret.nextPage, __ret.previousPage )
         });
 }
 
