@@ -14,21 +14,23 @@ function moreInfo() {
             modal.style.display = 'block';
         })
     }
-
 }
 
 function renderModal() {
     let modal = document.createElement('div');
     modal.setAttribute('class', 'modal');
     modal.setAttribute('id', 'myModal');
+    let modalContent = document.createElement('div');
+    modalContent.setAttribute('class', 'modalContent');
+    modal.appendChild(modalContent);
     let close = document.createElement('span');
     close.setAttribute('class', 'close');
     close.innerHTML = '&times;';
     let infoText = document.createElement('p');
-    let textText = document.createTextNode('ezaz');
+    let textText = generateList();
     infoText.appendChild(textText);
-    modal.appendChild(infoText);
-    modal.appendChild(close);
+    modalContent.appendChild(infoText);
+    modalContent.appendChild(close);
     document.body.appendChild(modal);
     close.addEventListener('click', function () {
         modal.style.display = 'none'
