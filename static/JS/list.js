@@ -1,4 +1,4 @@
-const tablePlace = document.querySelector("#table_place");
+const tablePlace = document.querySelector("#table_to_show");
 
 async function getApiResponse(spec) {
     let response = await fetch(`https://swapi.co/api/planets/${spec}`);
@@ -26,7 +26,7 @@ function generateInfoButton() {
     return infoButton
 }
 
-function generateList(selectedKeys, sth, results, elems) {
+function generateList(selectedKeys, sth, results) {
     selectedKeys.forEach(function (value) {
         let header = document.createElement("th");
         let headerText = document.createTextNode(value);
@@ -34,18 +34,24 @@ function generateList(selectedKeys, sth, results, elems) {
         sth.appendChild(header);
         tablePlace.appendChild(sth);
         console.log(value);
-        for (let planet of results) {
-            console.log(planet);
+
+    });
+    for (let planet of results) {
+        let elems = document.createElement("tr");
+        console.log(planet);
+        for (let elem of selectedKeys) {
             let tableElement = document.createElement("td");
-            let tableText = document.createTextNode(planet[value]);
-            tableElement.value = planet[value];
+            let tableText = document.createTextNode(planet[elem]);
+            tableElement.value = planet[elem];
             tableElement.appendChild(tableText);
             elems.appendChild(tableElement);
+            tablePlace.appendChild(elems);
         }
-        sth.appendChild(elems);
         let infoButton = generateInfoButton();
         elems.appendChild(infoButton);
-    });
+    }
+
+
 }
 
 function declareVariables(data) {
@@ -54,8 +60,7 @@ function declareVariables(data) {
     const selectedKeys = [allKeys[0], allKeys[3], allKeys[4],
         allKeys[6], allKeys[7], allKeys[8]];
     let sth = document.createElement("tr");
-    let elems = document.createElement("tr");
-    return {results, selectedKeys, sth, elems};
+    return {results, selectedKeys, sth};
 }
 
 getApiResponse(" ")
@@ -67,8 +72,7 @@ getApiResponse(" ")
         let results = __ret.results;
         const selectedKeys = __ret.selectedKeys;
         let sth = __ret.sth;
-        let elems = __ret.elems;
-        generateList(selectedKeys, sth, results, elems);
+        generateList(selectedKeys, sth, results);
     });
 
 
