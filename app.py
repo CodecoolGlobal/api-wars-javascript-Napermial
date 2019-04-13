@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, session, escape
-import util
+import util, requests
 
 app = Flask(__name__)
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
@@ -9,6 +9,25 @@ app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 def home_page():
     return render_template('index.html')
 
+@app.route("/")
+def home():
+    api_data = requests.get('https://swapi.co/api/planets')
+    jsondata = api_data.json()
+    planets = []
+
+    for data in jsondata["results"]:
+        planet = dict(
+            name=data["name"],
+            diameter=data["diameter"],
+            climate=data["climate"],
+            terrain=data["terrain"],
+            surface_water=data["surface_water"],
+            population=data["population"],
+            resident=len(data["residents"])
+        )
+        planets.append(planet)
+    # print(type(jsondata))
+    return render_template("index.html", planets=planets)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
