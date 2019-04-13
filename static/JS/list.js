@@ -26,8 +26,8 @@ getApiResponse(" ")
         };
         let results = data['results'];
         const allKeys = Object.keys(data.results[0]);
-        const selectedKeys = [allKeys.name, allKeys.diameter, allKeys.climate,
-        allKeys.terrain, allKeys.surface_water, allKeys.population];
+        const selectedKeys = [allKeys[0], allKeys[3], allKeys[4],
+        allKeys[6], allKeys[7], allKeys[8]];
         selectedKeys.forEach(function (value) {
 
             let sth = document.createElement("tr");
