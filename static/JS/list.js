@@ -18,8 +18,7 @@ function modalPopulate(links) {
                     selectedKeys[5], selectedKeys[6], selectedKeys[7]];
                 let landingSite = document.createElement('tr');
                 let modalContent = document.querySelector('#modalTable');
-                generateList(newerKeys, landingSite, data,modalContent)
-
+                generateList(newerKeys, landingSite, data, modalContent)
             });
     }
 
@@ -60,8 +59,8 @@ function renderModal() {
     close.innerHTML = '&times;';
     let infoTable = document.createElement('table');
     infoTable.setAttribute('id', 'modalTable');
-    modalContent.appendChild(infoTable);
     modalContent.appendChild(close);
+    modalContent.appendChild(infoTable);
     document.body.appendChild(modal);
     close.addEventListener('click', function () {
         document.body.removeChild(modal)
@@ -70,16 +69,51 @@ function renderModal() {
     return modal
 }
 
+function clearTable(table) {
+    while (table.firstChild) {
+    table.removeChild(table.firstChild);
+}}
+
 function navButtons(next, last) {
-    let nextPage = next;
-    let prevPage = last;
-    let nextButton = document.getElementById('#nextNavButton');
-    let prevButton = document.getElementById('lastNavButton')
+    let theTable = document.querySelector('#table_to_show');
+    let nextButton = document.querySelector('#nextNavButton');
+    nextButton.addEventListener('click', function () {
+        clearTable(theTable);
+        getApiResponse(next)
+        .then(function (data) {
+            const __ret = declareVariables(data);
+            let results = __ret.results;
+            const selectedKeys = __ret.selectedKeys;
+            let sth = __ret.landingSite;
+            let tablePlace = __ret.tablePlace;
+            generateList(selectedKeys, sth, results, tablePlace);
+            moreInfo();
+            next = __ret.nextPage;
+            last = __ret.previousPage
+        });
+    });
+    let prevButton = document.querySelector('#lastNavButton');
+    prevButton.addEventListener('click', function () {
+        clearTable(theTable);
+        getApiResponse(last)
+        .then(function (data) {
+            const __ret = declareVariables(data);
+            let results = __ret.results;
+            const selectedKeys = __ret.selectedKeys;
+            let sth = __ret.landingSite;
+            let tablePlace = __ret.tablePlace;
+            generateList(selectedKeys, sth, results, tablePlace);
+            moreInfo();
+            next = __ret.nextPage;
+            last = __ret.previousPage
+        });
+    })
 }
 
 function generateInfoButton(planetResidents) {
     let infoButton = document.createElement("button");
-    infoButton.innerHTML = "residents";
+    let resNumber = planetResidents[0].length;
+    infoButton.innerHTML = resNumber +" residents";
     infoButton.setAttribute('class', 'button');
     infoButton.setAttribute('name', planetResidents);
     return infoButton
@@ -127,8 +161,8 @@ function declareVariables(data) {
 }
 
 
-function main() {
-    getApiResponse("https://swapi.co/api/planets/")
+function main(mainUrl) {
+    getApiResponse(mainUrl)
         .then(function (data) {
             const __ret = declareVariables(data);
             let results = __ret.results;
@@ -141,4 +175,5 @@ function main() {
         });
 }
 
-main();
+let mainURL = "https://swapi.co/api/planets/";
+main(mainURL);
