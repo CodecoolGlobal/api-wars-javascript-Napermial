@@ -9,7 +9,7 @@ CREATE TABLE user_list (
 );
 
 
-ALTER TABLE IF EXISTS ONLY public.planet_votes DROP CONSTRAINT IF EXISTS pk_planet_votes CASCADE;
+ALTER TABLE IF EXISTS ONLY public.planet_votes DROP CONSTRAINT IF EXISTS pk_vote_id CASCADE;
 
 DROP TABLE IF EXISTS public.planet_votes;
 DROP SEQUENCE IF EXISTS public.planet_votes_seq;
@@ -18,6 +18,7 @@ CREATE TABLE planet_votes (
     planet_id integer,
     planet_name char(20),
     user_id integer,
+    unique (planet_id, user_id),
     registration_time timestamp without time zone
 );
 

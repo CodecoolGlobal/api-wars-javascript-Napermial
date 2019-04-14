@@ -118,7 +118,6 @@ function generateInfoButton(planetResidents) {
     infoButton.setAttribute('class', 'button');
     infoButton.setAttribute('name', planetResidents);
     return infoButton
-
 }
 
 function generateVoteButton(planetID, planetName) {
@@ -136,8 +135,6 @@ function generateList(selectedKeys, landingSite, results, tablePlace) {
         header.appendChild(headerText);
         landingSite.appendChild(header);
         tablePlace.appendChild(landingSite);
-        console.log(value);
-
     });
     for (let planet of results) {
         let elems = document.createElement("tr");
@@ -160,7 +157,7 @@ function generateList(selectedKeys, landingSite, results, tablePlace) {
                     }
                     
                 }).then(function (response) {
-                    
+
                 })
             })
         }
