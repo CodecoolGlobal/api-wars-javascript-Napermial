@@ -59,8 +59,8 @@ function renderModal() {
     close.innerHTML = '&times;';
     let infoTable = document.createElement('table');
     infoTable.setAttribute('id', 'modalTable');
-    modalContent.appendChild(infoTable);
     modalContent.appendChild(close);
+    modalContent.appendChild(infoTable);
     document.body.appendChild(modal);
     close.addEventListener('click', function () {
         document.body.removeChild(modal)
@@ -112,7 +112,8 @@ function navButtons(next, last) {
 
 function generateInfoButton(planetResidents) {
     let infoButton = document.createElement("button");
-    infoButton.innerHTML = "residents";
+    let resNumber = planetResidents[0].length;
+    infoButton.innerHTML = resNumber +" residents";
     infoButton.setAttribute('class', 'button');
     infoButton.setAttribute('name', planetResidents);
     return infoButton
