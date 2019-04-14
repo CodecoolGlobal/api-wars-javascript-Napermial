@@ -6,19 +6,30 @@ async function getApiResponse(spec) {
 
 function modalPopulate(links) {
     let arrOfLinks = extractLinks(links);
+    getApiResponse(arrOfLinks[0])
+        .then(function (data) {
+            data = [data];
+            let selectedKeys = Object.keys(data[0]);
+            let newerKeys = [selectedKeys[0], selectedKeys[1],
+                selectedKeys[2], selectedKeys[3], selectedKeys[4],
+                selectedKeys[5], selectedKeys[6], selectedKeys[7]];
+            let landingSite = document.createElement('tr');
+            let modalContent = document.querySelector('#modalTable');
+            generateHeader(newerKeys, landingSite, modalContent);
+        });
     for (link of arrOfLinks) {
         console.log(link);
         getApiResponse(link)
             .then(function (data) {
-                console.log(data);
                 data = [data];
                 let selectedKeys = Object.keys(data[0]);
                 let newerKeys = [selectedKeys[0], selectedKeys[1],
                     selectedKeys[2], selectedKeys[3], selectedKeys[4],
                     selectedKeys[5], selectedKeys[6], selectedKeys[7]];
-                let landingSite = document.createElement('tr');
                 let modalContent = document.querySelector('#modalTable');
-                generateList(newerKeys, landingSite, data, modalContent)
+
+                generateWithoutHeader(data, newerKeys, modalContent)
+                // generateList(newerKeys, landingSite, data, modalContent)
             });
     }
 
@@ -118,7 +129,6 @@ function generateInfoButton(planetResidents) {
     infoButton.setAttribute('class', 'button');
     infoButton.setAttribute('name', planetResidents);
     return infoButton
-
 }
 
 function generateVoteButton(planetID, planetName) {
@@ -129,45 +139,70 @@ function generateVoteButton(planetID, planetName) {
     return voteButton
 }
 
-function generateList(selectedKeys, landingSite, results, tablePlace) {
-    selectedKeys.forEach(function (value) {
-        let header = document.createElement("th");
-        let headerText = document.createTextNode(value);
-        header.appendChild(headerText);
-        landingSite.appendChild(header);
-        tablePlace.appendChild(landingSite);
-        console.log(value);
+function voteSetting(planetId, planetName) {
+    var voteButton = generateVoteButton(planetId, planetName);
+    voteButton.addEventListener('click', function () {
+        let planetList = {
+            'planetName': planetName,
+            'planetId': planetId
+        };
+        let url = '/';
+        fetch(url, {
+            method: 'POST',
+            body: JSON.stringify(planetList),
+            headers: {
+                'Content-Type': 'application/json'
+            }
 
+        }).then(function (response) {
+            if (response.ok) {
+                let successAlert = document.createElement('div');
+                successAlert.setAttribute('class', 'alert alert-success alert-dismissible');
+                let text = document.createTextNode('You have successfully voted for ' + planetName);
+                successAlert.appendChild(text);
+                document.body.appendChild(successAlert);
+                setTimeout(function () {
+                    document.body.removeChild(successAlert)
+                }, 2000)
+            } else if (response.status === 500) {
+                let warningAlert = document.createElement('div');
+                warningAlert.setAttribute('class', 'alert alert-warning alert-dismissible');
+                let text = document.createTextNode('You have already voted for ' + planetName);
+                warningAlert.appendChild(text);
+                document.body.appendChild(warningAlert);
+                setTimeout(function () {
+                    document.body.removeChild(warningAlert)
+                }, 2000)
+            }
+        })
     });
+    return voteButton;
+}
+
+function generateWithoutHeader(results, selectedKeys, tablePlace) {
     for (let planet of results) {
         let elems = document.createElement("tr");
         if (sessionStorage.getItem('user_name') !== undefined) {
             let planetName = planet['name'];
             let planetId = planet['url'];
             planetId = planetId.slice(29).replace('/', '');
-            var voteButton = generateVoteButton(planetId, planetName);
-            voteButton.addEventListener('click', function () {
-                let planetList = {
-                    'planetName': planetName,
-                    'planetId': planetId
-                };
-                let url = '/';
-                fetch(url, {
-                    method: 'POST', // or 'PUT'
-                    body: JSON.stringify(planetList), // data can be `string` or {object}!
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                    
-                }).then(function (response) {
-                    
-                })
-            })
+            var voteButton = voteSetting(planetId, planetName);
         }
-        console.log(planet);
         for (let elem of selectedKeys) {
             let tableElement = document.createElement("td");
             let tableText = document.createTextNode(planet[elem]);
+            if (elem === 'surface_water') {
+                tableText.textContent = planet[elem] + '%'
+            }
+            if (planet[elem] === 'unknown') {
+                tableText.textContent = planet[elem]
+            }
+            if (elem === 'population') {
+                tableText.textContent = planet[elem] + ' people';
+            }
+            if (planet[elem] !== [] && elem === 'residents') {
+                tableText.textContent = planet[elem].length + ' known resident(s)'
+            }
             tableElement.value = planet[elem];
             tableElement.appendChild(tableText);
             elems.appendChild(tableElement);
@@ -177,11 +212,26 @@ function generateList(selectedKeys, landingSite, results, tablePlace) {
             let infoButton = generateInfoButton([planet['residents']]);
             elems.appendChild(infoButton);
         }
-        if (elems.parentNode['id'] !== 'modalTable') {
+        if (elems.parentNode['id'] !== 'modalTable' && document.getElementById('#user_active')) {
             elems.appendChild(voteButton);
         }
-
     }
+}
+
+
+function generateHeader(selectedKeys, landingSite, tablePlace) {
+    selectedKeys.forEach(function (value) {
+        let header = document.createElement("th");
+        let headerText = document.createTextNode(value);
+        header.appendChild(headerText);
+        landingSite.appendChild(header);
+        tablePlace.appendChild(landingSite);
+    });
+}
+
+function generateList(selectedKeys, landingSite, results, tablePlace) {
+    generateHeader(selectedKeys, landingSite, tablePlace);
+    generateWithoutHeader(results, selectedKeys, tablePlace);
 }
 
 function declareVariables(data) {
@@ -191,7 +241,7 @@ function declareVariables(data) {
     let previousPage = data['previous'];
     const allKeys = Object.keys(data.results[0]);
     const selectedKeys = [allKeys[0], allKeys[3], allKeys[4],
-        allKeys[6], allKeys[7], allKeys[8]];
+        allKeys[6], allKeys[7], allKeys[8], allKeys[9]];
     let sth = document.createElement("tr");
     return {results, selectedKeys, landingSite: sth, nextPage, previousPage, tablePlace};
 }
