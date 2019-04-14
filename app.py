@@ -5,8 +5,15 @@ app = Flask(__name__)
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def home_page():
+    if request.method != 'POST':
+        return render_template('index.html')
+    planet_name = request.json['planetName']
+    planet_id = request.json['planetId']
+    user = session['user_id']
+    data = [planet_id, planet_name, user]
+    data_manager.add_vote_info(data)
     return render_template('index.html')
 
 
@@ -45,4 +52,4 @@ def register():
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)

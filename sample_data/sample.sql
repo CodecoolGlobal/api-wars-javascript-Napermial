@@ -25,4 +25,7 @@ ALTER TABLE ONLY user_list
     ADD CONSTRAINT pk_user_id PRIMARY KEY (id);
 
 ALTER TABLE ONLY planet_votes
+    ADD CONSTRAINT pk_vote_id PRIMARY KEY (id);
+
+ALTER TABLE ONLY planet_votes
     ADD CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES user_list(id) ON DELETE CASCADE;

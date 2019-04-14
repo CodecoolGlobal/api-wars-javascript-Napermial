@@ -145,8 +145,24 @@ function generateList(selectedKeys, landingSite, results, tablePlace) {
             let planetName = planet['name'];
             let planetId = planet['url'];
             planetId = planetId.slice(29).replace('/', '');
-            console.log(planetId);
-            var voteButton = generateVoteButton(planetId, planetName)
+            var voteButton = generateVoteButton(planetId, planetName);
+            voteButton.addEventListener('click', function () {
+                let planetList = {
+                    'planetName': planetName,
+                    'planetId': planetId
+                };
+                let url = '/';
+                fetch(url, {
+                    method: 'POST', // or 'PUT'
+                    body: JSON.stringify(planetList), // data can be `string` or {object}!
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                    
+                }).then(function (response) {
+                    
+                })
+            })
         }
         console.log(planet);
         for (let elem of selectedKeys) {

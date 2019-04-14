@@ -18,13 +18,11 @@ def get_user(cursor, user_name):
     users = cursor.fetchone()
     return users
 
-
 @connection.connection_handler
-def get_users(cursor):
+def add_vote_info(cursor, data):
+    the_date = datetime.now()
     cursor.execute('''
-    SELECT id, user_name FROM user_list
-    ''')
-    users = cursor.fetchall()
-    return users
+    INSERT INTO planet_votes(planet_id, planet_name, user_id, registration_time) VALUES (%s, %s, %s, %s)
+    ''', (data[0], data[1], data[2], the_date))
 
 
