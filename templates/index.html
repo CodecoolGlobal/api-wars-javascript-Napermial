@@ -5,6 +5,7 @@
     <title>EJ PEE EYE WA:Z</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='CSS/modal.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.css') }}">
+
     <script type="module" src="/static/JS/dataHandler.js"></script>
     <script src="/static/JS/list.js" defer></script>
 </head>
@@ -14,8 +15,10 @@
 <h1>STAR WARS universe planets</h1>
 <div id="table_place">
     <table id="table_to_show">
-
     </table>
 </div>
+{% if 'user_name' in session %}
+    <div id="user_active"></div>
+{% endif %}
 </body>
 </html>

@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, session
 import util, data_manager
+from psycopg2 import IntegrityError
 
 app = Flask(__name__)
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
@@ -14,7 +15,7 @@ def home_page():
     user = session['user_id']
     data = [planet_id, planet_name, user]
     data_manager.add_vote_info(data)
-    return render_template('index.html')
+    return render_template('index.html', user=session['user_name'])
 
 
 @app.route('/login', methods=['GET', 'POST'])
