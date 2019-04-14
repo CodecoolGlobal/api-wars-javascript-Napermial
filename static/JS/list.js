@@ -121,9 +121,12 @@ function generateInfoButton(planetResidents) {
 
 }
 
-function generateVoteButton() {
+function generateVoteButton(planetID, planetName) {
     let voteButton = document.createElement('button');
-
+    voteButton.setAttribute('class', planetName);
+    voteButton.setAttribute('id', planetID);
+    voteButton.innerText = 'vote for ' + planetName;
+    return voteButton
 }
 
 function generateList(selectedKeys, landingSite, results, tablePlace) {
@@ -143,7 +146,7 @@ function generateList(selectedKeys, landingSite, results, tablePlace) {
             let planetId = planet['url'];
             planetId = planetId.slice(29).replace('/', '');
             console.log(planetId);
-            generateVoteButton()
+            var voteButton = generateVoteButton(planetId, planetName)
         }
         console.log(planet);
         for (let elem of selectedKeys) {
@@ -157,6 +160,9 @@ function generateList(selectedKeys, landingSite, results, tablePlace) {
         if (planet['residents'] && planet['residents'].length) {
             let infoButton = generateInfoButton([planet['residents']]);
             elems.appendChild(infoButton);
+        }
+        if (elems.parentNode['id'] !== 'modalTable') {
+            elems.appendChild(voteButton);
         }
 
     }
