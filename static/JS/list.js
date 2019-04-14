@@ -64,7 +64,8 @@ function renderModal() {
     modalContent.appendChild(close);
     document.body.appendChild(modal);
     close.addEventListener('click', function () {
-        modal.style.display = 'none'
+        document.body.removeChild(modal)
+
     });
     return modal
 }
