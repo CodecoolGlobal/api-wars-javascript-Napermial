@@ -9,6 +9,7 @@ app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 def home_page():
     return render_template('index.html')
 
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -20,7 +21,7 @@ def login():
             is_valid_user = util.verify_password(request.form['password'], user['password'])
             session['is_valid'] = is_valid_user
         return redirect('/list')
-    return render_template('add-user.html', login=True)
+    return render_template('registration.html', login=True)
 
 
 @app.route('/logout')
@@ -29,9 +30,19 @@ def logout():
     return redirect('/')
 
 
-@app.route("/list")
-def list():
-    return render_template("list.html")
+@app.route('/register')
+def register():
+    if request.method != 'POST':
+        return render_template('registration.html', login=False)
+    user_name = request.form.get('user_name')
+    hashed_password = util.hash_password(request.form.get('password'))
+    datas = {
+        'user_name': user_name,
+        'password': hashed_password,
+        'rank': 4
+    }
+    data_manager.register_user(datas)
+    return redirect('/')
 
 
 if __name__ == '__main__':
