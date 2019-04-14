@@ -1,30 +1,40 @@
-const tablePlace = document.querySelector("#table_to_show");
-
 async function getApiResponse(spec) {
-    let response = await fetch(`https://swapi.co/api/${spec}`);
-    let data = await response.json();
-    return data;
+    let response = await fetch(`${spec}`);
+    return await response.json()
 }
 
 
 function modalPopulate(links) {
-    // if (links.slice(',') === links) {
-    //     let parse = document.createElement('a');
-    //     parse.href = links;
-    //     let path = parse.pathname;
-    //     console.log(path)
-    // }else{
-    // for (let link of [links]) {
-    //     let parse = document.createElement('a');
-    //     parse.href = link;
-    //     let path = parse.pathname;
-    //     console.log(path)
-    // }}
-    //
-    // links = links.match(/people/g);
-    // console.log(links)
+    let arrOfLinks = extractLinks(links);
+    for (link of arrOfLinks) {
+        console.log(link);
+        getApiResponse(link)
+            .then(function (data) {
+                console.log(data);
+                data = [data];
+                let selectedKeys = Object.keys(data[0]);
+                let newerKeys = [selectedKeys[0], selectedKeys[1],
+                    selectedKeys[2], selectedKeys[3], selectedKeys[4],
+                    selectedKeys[5], selectedKeys[6], selectedKeys[7]];
+                let landingSite = document.createElement('tr');
+                let modalContent = document.querySelector('#modalTable');
+                generateList(newerKeys, landingSite, data,modalContent)
+
+            });
+    }
+
 }
 
+function extractLinks(links) {
+    let linkNumber = (links.match(/,/g) || []).length + 1;
+    let linkArray = [];
+    for (let i = 0; i < linkNumber; i++) {
+        let link = links.match('https?:\/\/(www\.)?[a-z]{2,256}\.[a-z]{2,4}\/([a-z0-9]*)\/([a-z]*)\/([0-9]*)\/')[0];
+        linkArray.push(link);
+        links = links.replace(link, '')
+    }
+    return linkArray
+}
 
 function moreInfo() {
     let buttons = document.querySelectorAll('button.button');
@@ -48,8 +58,9 @@ function renderModal() {
     let close = document.createElement('span');
     close.setAttribute('class', 'close');
     close.innerHTML = '&times;';
-    let infoText = document.createElement('table');
-    modalContent.appendChild(infoText);
+    let infoTable = document.createElement('table');
+    infoTable.setAttribute('id', 'modalTable');
+    modalContent.appendChild(infoTable);
     modalContent.appendChild(close);
     document.body.appendChild(modal);
     close.addEventListener('click', function () {
@@ -74,7 +85,7 @@ function generateInfoButton(planetResidents) {
 
 }
 
-function generateList(selectedKeys, landingSite, results) {
+function generateList(selectedKeys, landingSite, results, tablePlace) {
     selectedKeys.forEach(function (value) {
         let header = document.createElement("th");
         let headerText = document.createTextNode(value);
@@ -103,6 +114,7 @@ function generateList(selectedKeys, landingSite, results) {
 }
 
 function declareVariables(data) {
+    const tablePlace = document.querySelector("#table_to_show");
     let results = data['results'];
     let nextPage = data['next'];
     let previousPage = data['previous'];
@@ -110,23 +122,21 @@ function declareVariables(data) {
     const selectedKeys = [allKeys[0], allKeys[3], allKeys[4],
         allKeys[6], allKeys[7], allKeys[8]];
     let sth = document.createElement("tr");
-    return {results, selectedKeys, landingSite: sth, nextPage, previousPage};
+    return {results, selectedKeys, landingSite: sth, nextPage, previousPage, tablePlace};
 }
 
-function secondaryFetch(link) {
-
-}
 
 function main() {
-    getApiResponse("planets/")
+    getApiResponse("https://swapi.co/api/planets/")
         .then(function (data) {
             const __ret = declareVariables(data);
             let results = __ret.results;
             const selectedKeys = __ret.selectedKeys;
             let sth = __ret.landingSite;
-            generateList(selectedKeys, sth, results);
+            let tablePlace = __ret.tablePlace;
+            generateList(selectedKeys, sth, results, tablePlace);
             moreInfo();
-            navButtons(__ret.nextPage, __ret.previousPage )
+            navButtons(__ret.nextPage, __ret.previousPage)
         });
 }
 
