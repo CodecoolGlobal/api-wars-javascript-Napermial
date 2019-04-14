@@ -13,9 +13,6 @@
             <li>
                 <a class="nav-link" href="{{ url_for('logout') }}">logout({{ session['user_name'] }})</a>
             </li>
-            <!--<li>-->
-            <!--<a class="nav-link" href="{{ url_for('display', type='user', id=session['id'])}}">{{session['user_name']}}</a>-->
-            <!--</li>-->
         {% else %}
             <ul class="navbar-nav mr-auto">
             <ul class="nav navbar-right">

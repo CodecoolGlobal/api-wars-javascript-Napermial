@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, session
-import util
+import util, data_manager
 
 app = Flask(__name__)
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
@@ -12,16 +12,15 @@ def home_page():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    if request.method == 'POST':
-        user = data_manager.get_user(request.form.get('user_name'))
-        if user is not None:
-            session['user_name'] = request.form['user_name']
-            session['user_id'] = user['id']
-            session['user_rank'] = user['rank']
-            is_valid_user = util.verify_password(request.form['password'], user['password'])
-            session['is_valid'] = is_valid_user
-        return redirect('/list')
-    return render_template('registration.html', login=True)
+    if request.method != 'POST':
+        return render_template('registration.html', login=True)
+    user = data_manager.get_user(request.form.get('user_name'))
+    if user is not None:
+        session['user_name'] = request.form['user_name']
+        session['user_id'] = user['id']
+        is_valid_user = util.verify_password(request.form['password'], user['password'])
+        session['is_valid'] = is_valid_user
+    return redirect('/')
 
 
 @app.route('/logout')
@@ -30,7 +29,7 @@ def logout():
     return redirect('/')
 
 
-@app.route('/register')
+@app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method != 'POST':
         return render_template('registration.html', login=False)

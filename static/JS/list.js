@@ -71,8 +71,9 @@ function renderModal() {
 
 function clearTable(table) {
     while (table.firstChild) {
-    table.removeChild(table.firstChild);
-}}
+        table.removeChild(table.firstChild);
+    }
+}
 
 function navButtons(next, last) {
     let theTable = document.querySelector('#table_to_show');
@@ -80,43 +81,48 @@ function navButtons(next, last) {
     nextButton.addEventListener('click', function () {
         clearTable(theTable);
         getApiResponse(next)
-        .then(function (data) {
-            const __ret = declareVariables(data);
-            let results = __ret.results;
-            const selectedKeys = __ret.selectedKeys;
-            let sth = __ret.landingSite;
-            let tablePlace = __ret.tablePlace;
-            generateList(selectedKeys, sth, results, tablePlace);
-            moreInfo();
-            next = __ret.nextPage;
-            last = __ret.previousPage
-        });
+            .then(function (data) {
+                const __ret = declareVariables(data);
+                let results = __ret.results;
+                const selectedKeys = __ret.selectedKeys;
+                let sth = __ret.landingSite;
+                let tablePlace = __ret.tablePlace;
+                generateList(selectedKeys, sth, results, tablePlace);
+                moreInfo();
+                next = __ret.nextPage;
+                last = __ret.previousPage
+            });
     });
     let prevButton = document.querySelector('#lastNavButton');
     prevButton.addEventListener('click', function () {
         clearTable(theTable);
         getApiResponse(last)
-        .then(function (data) {
-            const __ret = declareVariables(data);
-            let results = __ret.results;
-            const selectedKeys = __ret.selectedKeys;
-            let sth = __ret.landingSite;
-            let tablePlace = __ret.tablePlace;
-            generateList(selectedKeys, sth, results, tablePlace);
-            moreInfo();
-            next = __ret.nextPage;
-            last = __ret.previousPage
-        });
+            .then(function (data) {
+                const __ret = declareVariables(data);
+                let results = __ret.results;
+                const selectedKeys = __ret.selectedKeys;
+                let sth = __ret.landingSite;
+                let tablePlace = __ret.tablePlace;
+                generateList(selectedKeys, sth, results, tablePlace);
+                moreInfo();
+                next = __ret.nextPage;
+                last = __ret.previousPage
+            });
     })
 }
 
 function generateInfoButton(planetResidents) {
     let infoButton = document.createElement("button");
     let resNumber = planetResidents[0].length;
-    infoButton.innerHTML = resNumber +" residents";
+    infoButton.innerHTML = resNumber + " residents";
     infoButton.setAttribute('class', 'button');
     infoButton.setAttribute('name', planetResidents);
     return infoButton
+
+}
+
+function generateVoteButton() {
+    let voteButton = document.createElement('button');
 
 }
 
@@ -132,6 +138,13 @@ function generateList(selectedKeys, landingSite, results, tablePlace) {
     });
     for (let planet of results) {
         let elems = document.createElement("tr");
+        if (sessionStorage.getItem('user_name') !== undefined) {
+            let planetName = planet['name'];
+            let planetId = planet['url'];
+            planetId = planetId.slice(29).replace('/', '');
+            console.log(planetId);
+            generateVoteButton()
+        }
         console.log(planet);
         for (let elem of selectedKeys) {
             let tableElement = document.createElement("td");
@@ -145,6 +158,7 @@ function generateList(selectedKeys, landingSite, results, tablePlace) {
             let infoButton = generateInfoButton([planet['residents']]);
             elems.appendChild(infoButton);
         }
+
     }
 }
 
