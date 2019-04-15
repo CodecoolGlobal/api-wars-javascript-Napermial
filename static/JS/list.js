@@ -212,9 +212,12 @@ function generateWithoutHeader(results, selectedKeys, tablePlace) {
             let infoButton = generateInfoButton([planet['residents']]);
             elems.appendChild(infoButton);
         }
-        if (elems.parentNode['id'] !== 'modalTable' && document.getElementById('#user_active')) {
+
+        if (document.querySelector('#user_active')) {
             elems.appendChild(voteButton);
-        }
+        if (elems.parentNode['id'] !== 'modalTable') {
+            elems.appendChild(voteButton);
+        }}
     }
 }
 
